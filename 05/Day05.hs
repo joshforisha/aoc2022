@@ -41,16 +41,12 @@ divideAt num xs =
     [sel] ++ (divideAt num rest)
 
 initializeStacks :: [String] -> Stacks
-initializeStacks stacksData =
-  let
-    rows = init stacksData
-        |> map (divideAt 4)
-        |> map (map (!! 1))
-    initList = map (mapWithIndex (\c i -> (i + 1, [c] ++ ""))) rows
-        |> concat
-        |> filter (\(_, c) -> c /= " ")
-  in
-    IM.fromListWith (++) initList
+initializeStacks =
+    init
+    .> map (divideAt 4 .> map (!! 1) .> mapWithIndex (\c i -> (i + 1, [c] ++ "")))
+    .> concat
+    .> filter (\(_, c) -> c /= " ")
+    .> IM.fromListWith (++)
 
 int :: String -> Int
 int x = read x :: Int
